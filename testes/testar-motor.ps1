@@ -1,11 +1,12 @@
-param([string]$Java = 'java')
+param([string]$Java = 'java', [string]$Node = 'node')
 $ErrorActionPreference='Stop'
 $b=Split-Path -Parent $PSScriptRoot
 $r=[IO.Path]::GetTempPath()
 $java=(Get-Command $Java -CommandType Application | Select-Object -First 1).Source
-$motor=Start-Process -FilePath $java -ArgumentList '-Dspring.profiles.active=offline','-Dserver.address=127.0.0.1','-Dmanagement.server.address=127.0.0.1','-Dmanagement.tracing.enabled=false','-jar','api-regime-geral.jar' -WindowStyle Hidden -WorkingDirectory $b -RedirectStandardOutput (Join-Path $r 'motor-piloto.log') -RedirectStandardError (Join-Path $r 'motor-piloto-erro.log') -PassThru
+$node=(Get-Command $Node -CommandType Application | Select-Object -First 1).Source
+$motor=Start-Process -FilePath $java -ArgumentList '-XX:-UseBASE64Intrinsics','-Dspring.profiles.active=offline','-Dserver.address=127.0.0.1','-Dmanagement.server.address=127.0.0.1','-Dmanagement.tracing.enabled=false','-jar','api-regime-geral.jar' -WindowStyle Hidden -WorkingDirectory $b -RedirectStandardOutput (Join-Path $r 'motor-piloto.log') -RedirectStandardError (Join-Path $r 'motor-piloto-erro.log') -PassThru
 try {
-    $proxy=Start-Process -FilePath (Get-Command node).Source -ArgumentList 'servidor-local.mjs' -WorkingDirectory $b -WindowStyle Hidden -PassThru
+    $proxy=Start-Process -FilePath $node -ArgumentList 'servidor-local.mjs' -WorkingDirectory $b -WindowStyle Hidden -PassThru
     $params=@{Uri='http://127.0.0.1:8787/motor/regime-regular';Method='Post';Headers=@{Origin='http://127.0.0.1:8787'};ContentType='application/json';TimeoutSec=25}
     $entrada=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'operacao-teste.json')
     $resp=$null

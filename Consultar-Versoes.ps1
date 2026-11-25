@@ -1,6 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $versoes = @{
-    'regime-regular' = '150cccbe414d4a5edea703e4f7a424af5aa222c7'
+    'regime-regular' = 'def97056b799da8dd1306f4c9e47c669f4d44b4e'
     'simples-nacional' = 'c5b0f01c8351c3f0d0795cc617b29d233e9f98df'
 }
 foreach ($nome in $versoes.Keys | Sort-Object) {
