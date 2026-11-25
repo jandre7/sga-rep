@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Simulador da transição tributária | Souza Gonçalves</title>
+<style>
+:root{--ink:#172d28;--muted:#52665e;--paper:#f3f5ee;--dark:#10392e;--line:#dce4d9;--accent:#d9f1a9;--white:#fff; font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0}header{background:var(--dark);color:white;padding:19px max(5vw,24px);border-bottom:1px solid #537263;display:flex;justify-content:space-between;gap:14px;align-items:center}header b{font-family:Georgia,serif;font-size:1.2rem}header span{font-size:.78rem;color:#d5e8dd}main{max-width:1150px;padding:0 24px;margin:auto}.intro{padding:49px 0 25px}.intro h1{font-family:"Instrument Serif",Georgia,serif;font-weight:500;font-size:clamp(2.55rem,6vw,4.45rem);line-height:1;margin:0 0 13px;letter-spacing:-.04em}.intro p,p{line-height:1.55}.intro p{color:var(--muted);margin:0;max-width:65ch}.tabs{display:flex;gap:8px;margin:0 0 20px;flex-wrap:wrap}.tabs button{background:transparent;border:1px solid #becdc1;color:var(--ink);border-radius:22px;padding:9px 16px}.tabs button[aria-selected=true]{background:var(--dark);color:white;border-color:var(--dark)}button{font:inherit;cursor:pointer;font-weight:650}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #448464;outline-offset:2px}.layout{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;align-items:start}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:26px}.card h2{font-family:Georgia,serif;font-size:1.55rem;font-weight:500;margin:0 0 14px}.card p{margin:0 0 18px;color:var(--muted);font-size:.89rem}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.wide{grid-column:1/-1}label{display:flex;flex-direction:column;gap:5px;font-size:.85rem;font-weight:650}input,select{min-width:0;width:100%;font:inherit;font-size:1rem;color:var(--ink);border:1px solid #b9c7bd;background:#fbfcf9;padding:9px 10px;border-radius:8px}.actions{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}.primary,.secondary{border:1px solid transparent;padding:10px 14px;border-radius:8px}.primary{background:var(--dark);color:white}.secondary{background:white;color:var(--ink);border-color:#b9c7bd}.results{background:var(--dark);color:white}.results p{color:#e0eee4}.hero{background:var(--accent);color:var(--dark);padding:15px 16px;border-radius:12px;font-size:.91rem}.hero strong{display:block;font-size:clamp(1.4rem,4vw,2.3rem);margin-top:3px}.rows{margin:13px 0}.row{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #517167;padding:10px 0;font-size:.91rem}.row strong{white-space:nowrap}.results details{font-size:.87rem;line-height:1.5}.results pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.79rem}.foot{margin:22px 0 35px;color:var(--muted);font-size:.84rem}.foot a{color:var(--dark)}.notice{margin:12px 0 0!important;font-size:.84rem!important}.results .notice{color:#e9f4d8}[hidden]{display:none!important}@media(max-width:720px){.layout{grid-template-columns:1fr}.intro{padding-top:30px}.card{padding:19px}}@media(max-width:410px){.fields{grid-template-columns:1fr}main{padding:0 15px}}@media print{header,.tabs,.actions,.foot{display:none}.layout{display:block}.card{break-inside:avoid;margin-bottom:12px}.results,.results p,.results .notice{color:#000;background:white}}
+</style>
+</head>
+<body>
+<header><b>Souza Gonçalves Advocacia</b><span>Piloto para uso interno</span></header>
+<main>
+<section class="intro"><h1>Transição tributária</h1><p>Compare o custo anual de um cenário de transição ou calcule os tributos de uma operação no motor oficial do Regime Regular.</p></section>
+<div class="tabs" role="tablist" aria-label="Modo de simulação">
+<button id="tab-cenario" role="tab" aria-selected="true" aria-controls="cenario">Impacto anual</button>
+<button id="tab-operacao" role="tab" aria-selected="false" aria-controls="operacao" tabindex="-1">Operação · Regime Regular</button>
+</div>
+<section id="cenario" role="tabpanel" aria-labelledby="tab-cenario" class="layout">
+<form id="anual" class="card">
+<h2>Premissas do cenário</h2>
+<p>Use o mesmo período e a mesma projeção de receita nos dois cenários. Informe valores anuais em reais. Preencha com zero onde não houver impacto.</p>
+<div class="fields">
+<label>Ano do cenário<select name="ano"><option>2026</option><option selected>2027</option><option>2028</option><option>2029</option><option>2030</option><option>2031</option><option>2032</option><option>2033</option></select></label>
+<label>Receita bruta anual (R$)<input name="receita" type="number" min="0.01" max="1000000000000" step="0.01" required></label>
+<label>Tributos sem a reforma (R$)<input name="referencia" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label>Tributos anteriores ainda pagos (R$)<input name="remanescentes" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label>CBS a recolher (R$)<input name="cbs" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label>IBS a recolher (R$)<input name="ibs" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label>Imposto Seletivo a recolher (R$)<input name="is" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label>Gasto único de adaptação (R$)<input name="unico" type="number" min="0" max="1000000000000" step="0.01" required></label>
+<label class="wide">Gasto recorrente adicional no ano (R$)<input name="recorrente" type="number" min="0" max="1000000000000" step="0.01" required></label>
+</div>
+<p class="notice">Informe IBS e CBS líquidos, após créditos e compensações já validados. Em 2026, verifique se há dispensa de recolhimento antes de incluir valores destacados.</p>
+<div class="actions"><button class="primary">Calcular impacto</button><button class="secondary" type="button" id="exemplo">Preencher exemplo fictício</button><button class="secondary" type="reset">Limpar</button></div>
+</form>
+<section class="card results" aria-live="polite"><h2>Impacto estimado</h2><div id="impacto"><p>Preencha os valores para comparar o cenário de transição com o cenário sem a reforma.</p></div></section>
+</section>
+
+<section id="operacao" role="tabpanel" aria-labelledby="tab-operacao" class="layout" hidden>
+<form class="card" id="fiscal">
+<h2>Dados de uma operação</h2>
+<p>Informe a classificação e a base já conferidas. Esta tela atende um item de IBS e CBS. O motor do piloto é a versão 1.6.1, base V0059. Na validação de 18/11/2026, a Receita já informava uma versão online mais recente. Use este modo para testes com dados fictícios.</p>
+<div class="fields">
+<label>Fato gerador<input name="data" type="date" min="2026-01-01" max="2033-12-31" value="2026-11-18" required></label>
+<label>UF de destino<select name="uf"><option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option selected>SC</option><option>SP</option><option>SE</option><option>TO</option></select></label>
+<label>Município de destino (IBGE)<input name="municipio" value="4202404" inputmode="numeric" pattern="[0-9]{7}" required></label>
+<label>Base de cálculo (R$)<input name="base" type="number" min="0.01" max="1000000000000" step="0.01" required></label>
+<label>Tipo de item<select name="tipo"><option value="ncm">Bem (NCM)</option><option value="nbs">Serviço (NBS)</option></select></label>
+<label>Código NCM ou NBS<input name="codigo" inputmode="numeric" pattern="[0-9]{8}" required></label>
+<label>CST<input name="cst" inputmode="numeric" pattern="[0-9]{3}" required></label>
+<label>Classificação tributária (cClassTrib)<input name="classificacao" inputmode="numeric" pattern="[0-9]{6}" required></label>
+<div id="aliquotas" class="fields wide" hidden>
+<label>CBS nominal (%)<input name="aliqCbs" type="number" min="0" max="100" step="0.0001" disabled></label>
+<label>IBS estadual nominal (%)<input name="aliqUf" type="number" min="0" max="100" step="0.0001" disabled></label>
+<label>IBS municipal nominal (%)<input name="aliqMun" type="number" min="0" max="100" step="0.0001" disabled></label>
+<p class="wide notice">A partir de 2027, este motor exige alíquotas nominais informadas. O resultado será simulado.</p>
+</div>
+</div>
+<p class="notice" id="conexao" role="status"></p>
+<div class="actions"><button class="primary" id="enviar">Consultar motor oficial</button><button class="secondary" type="button" id="exemplo-operacao">Preencher exemplo fictício</button></div>
+</form>
+<section class="card results" aria-live="polite"><h2>Resultado por operação</h2><div id="retorno"><p>O resultado e a memória do motor serão exibidos aqui.</p></div></section>
+</section>
+<p class="foot">O comparativo anual usa as premissas informadas. O cálculo por operação requer a API local da Receita. <a href="https://legis.senado.leg.br/norma/37959796">EC 132/2023</a> · <a href="https://www2.camara.leg.br/legin/fed/leicom/2025/leicomplementar-214-16-janeiro-2025-796905-normaatualizada-pl.pdf">LC 214/2025</a> · <a href="https://github.com/ReceitaFederal/calculadora-rtc-regime-regular">Motor da Receita Federal</a>.</p>
+</main>
+<script>
+const moeda = new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'});
+const porcentagem = new Intl.NumberFormat('pt-BR', {style:'percent', maximumFractionDigits:2});
+const byId = id => document.getElementById(id);
+const node = (tag, texto, classe) => {
+  const elemento = document.createElement(tag);
+  elemento.textContent = texto;
+  if (classe) elemento.className = classe;
+  return elemento;
+};
+const tabs = [...document.querySelectorAll('[role=tab]')];
+function abrir(tab) {
+  tabs.forEach(item => {
+    const ativa = item === tab;
+    item.setAttribute('aria-selected', ativa);
+    item.tabIndex = ativa ? 0 : -1;
+    byId(item.getAttribute('aria-controls')).hidden = !ativa;
+  });
+}
+tabs.forEach((tab,i) => {
+  tab.addEventListener('click', () => abrir(tab));
+  tab.addEventListener('keydown', event => {
+    if (!['ArrowRight','ArrowLeft','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const proxima = tabs[event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length-1 : (i+1)%tabs.length];
+    abrir(proxima);
+    proxima.focus();
+  });
+});
+function calcularImpacto(dados) {
+  const centavos = campo => Math.round(Number(dados.get(campo))*100);
+  const receita = centavos('receita');
+  const referencia = centavos('referencia');
+  const novos = centavos('cbs')+centavos('ibs')+centavos('is');
+  const tributos = centavos('remanescentes')+novos;
+  const adaptacao = centavos('unico')+centavos('recorrente');
+  const total = tributos+adaptacao;
+  return {receita, referencia, novos, tributos, adaptacao, total, diferenca:total-referencia};
+}
+function linhas(valores) {
+  const lista = node('div','','rows');
+  for (const [label,valor] of valores) {
+    const linha = node('div','','row');
+    linha.append(node('span',label),node('strong',valor));
+    lista.append(linha);
+  }
+  return lista;
+}
+const dinheiro = valor => moeda.format(valor/100);
+const anual = byId('anual');
+const impacto = byId('impacto');
+const inicial = impacto.firstElementChild.textContent;
+anual.addEventListener('submit', event => {
+  event.preventDefault();
+  const dados = new FormData(anual);
+  const r = calcularImpacto(dados);
+  const destaque = node('div', 'Variação de desembolso · '+dados.get('ano'),'hero');
+  const delta = r.diferenca > 0 ? '+'+dinheiro(r.diferenca) : dinheiro(r.diferenca);
+  destaque.append(node('strong',delta));
+  impacto.replaceChildren(destaque, linhas([
+    ['Tributos sem a reforma',dinheiro(r.referencia)],
+    ['Novos tributos líquidos',dinheiro(r.novos)],
+    ['Total de tributos na transição',dinheiro(r.tributos)],
+    ['Gastos de adaptação',dinheiro(r.adaptacao)],
+    ['Total na transição',dinheiro(r.total)],
+    ['Carga tributária de referência',porcentagem.format(r.referencia/r.receita)],
+    ['Carga tributária na transição',porcentagem.format(r.tributos/r.receita)]
+  ]));
+  if (dados.get('ano') === '2026') impacto.append(node('p','Em 2026, considere a dispensa de recolhimento quando aplicável.','notice'));
+});
+anual.addEventListener('reset', () => impacto.replaceChildren(node('p',inicial)));
+anual.addEventListener('input', () => impacto.replaceChildren(node('p',inicial)));
+function preencher(form,dados) {
+  for (const [chave,valor] of Object.entries(dados)) form.elements.namedItem(chave).value = valor;
+}
+byId('exemplo').addEventListener('click', () => {
+  preencher(anual,{ano:2027,receita:1200000,referencia:100000,remanescentes:20000,cbs:75000,ibs:5000,is:0,unico:15000,recorrente:6000});
+  anual.requestSubmit();
+});
+const fiscal = byId('fiscal');
+function camposFiscais() {
+  const f = fiscal.elements;
+  const simulada = Number(f.data.value.slice(0,4)) >= 2027;
+  byId('aliquotas').hidden = !simulada;
+  for (const campo of [f.aliqCbs,f.aliqUf,f.aliqMun]) {
+    campo.disabled = !simulada;
+    campo.required = simulada;
+  }
+  f.codigo.pattern = f.tipo.value === 'ncm' ? '[0-9]{8}' : '[0-9]{9}';
+}
+fiscal.addEventListener('input',camposFiscais);
+byId('exemplo-operacao').addEventListener('click', () => {
+  preencher(fiscal,{data:'2027-03-10',uf:'RS',municipio:4314902,base:1200,tipo:'nbs',codigo:'122011200',cst:'200',classificacao:'200028',aliqCbs:8.8,aliqUf:0.05,aliqMun:0.05});
+  camposFiscais();
+});
+function operacao(dados) {
+  const item = {numero:1,[dados.get('tipo')]:dados.get('codigo'),cst:dados.get('cst'),cClassTrib:dados.get('classificacao'),baseCalculo:Number(dados.get('base'))};
+  const data = dados.get('data');
+  if (Number(data.slice(0,4)) >= 2027) item.aliquotasNominais = {cbs:Number(dados.get('aliqCbs')),ibsEstadual:Number(dados.get('aliqUf')),ibsMunicipal:Number(dados.get('aliqMun'))};
+  return {id:crypto.randomUUID().replaceAll('-',''),versao:'1.0.0',dhFatoGerador:data+'T12:00:00-03:00',municipio:Number(dados.get('municipio')),uf:dados.get('uf'),itens:[item]};
+}
+const retorno = byId('retorno');
+const botao = byId('enviar');
+const local = location.origin === 'http://127.0.0.1:8787';
+byId('conexao').textContent = local ? 'A consulta envia os dados ao motor rodando neste computador.' : 'Abra o piloto pelo serviço local para consultar o motor. O comparativo anual funciona neste arquivo.';
+botao.disabled = !local;
+fiscal.addEventListener('submit',async event => {
+  event.preventDefault();
+  if (!local) return;
+  botao.disabled = true;
+  retorno.replaceChildren(node('p','Consultando o motor…'));
+  try {
+    const pedido = operacao(new FormData(fiscal));
+    const resposta = await fetch('/motor/regime-regular',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(pedido),signal:AbortSignal.timeout(28000)});
+    const resultado = await resposta.json();
+    if (!resposta.ok) throw new Error(resultado.mensagem || resultado.detail || 'O motor recusou a solicitação.');
+    const objeto = resultado.objetos?.[0];
+    const grupo = objeto?.tribCalc?.IBSCBS?.gIBSCBS;
+    const estado = objeto?.estadoItem;
+    if (!['CALCULADO','CALCULO_SIMULADO'].includes(estado) || !grupo) {
+      retorno.replaceChildren(node('p', 'Operação sem resultado válido · '+(estado ?? 'resposta incompleta')));
+    } else {
+      const valor = raw => raw != null && Number.isFinite(Number(raw)) ? moeda.format(Number(raw)) : 'Não informado';
+      retorno.replaceChildren(node('p',estado === 'CALCULO_SIMULADO' ? 'Simulação com as alíquotas informadas' : 'Cálculo retornado pelo motor'),linhas([
+        ['CBS',valor(grupo.gCBS?.vCBS)],['IBS estadual',valor(grupo.gIBSUF?.vIBSUF)],['IBS municipal',valor(grupo.gIBSMun?.vIBSMun)],['IBS total',valor(grupo.vIBS)]
+      ]));
+    }
+    if (pedido.dhFatoGerador.startsWith('2026')) retorno.append(node('p','O resultado da operação não define, por si só, o recolhimento em 2026.','notice'));
+    const detalhes = node('details','');
+    detalhes.append(node('summary','Resposta e memória de cálculo'),node('pre',JSON.stringify(resultado,null,2)));
+    retorno.append(detalhes);
+  } catch (erro) {
+    retorno.replaceChildren(node('p',erro.message || 'Não foi possível consultar o motor.'));
+  } finally {
+    botao.disabled = false;
+  }
+});
+camposFiscais();
+</script>
+</body>
+</html>

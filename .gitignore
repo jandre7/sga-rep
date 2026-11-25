@@ -1,0 +1,12 @@
+*.jar
+*.db
+*.db-*
+*.zip
+*.log
+.env
+.env.*
+node_modules/
+target/
+calculadora/db/
+.m2/
+clientes/
