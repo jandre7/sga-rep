@@ -7,7 +7,7 @@ $motor=Start-Process -FilePath $java -ArgumentList '-Dspring.profiles.active=off
 try {
     $proxy=Start-Process -FilePath (Get-Command node).Source -ArgumentList 'servidor-local.mjs' -WorkingDirectory $b -WindowStyle Hidden -PassThru
     $params=@{Uri='http://127.0.0.1:8787/motor/regime-regular';Method='Post';Headers=@{Origin='http://127.0.0.1:8787'};ContentType='application/json';TimeoutSec=25}
-    $entrada=Get-Content -Raw -LiteralPath (Join-Path  'operacao-teste.json')
+    $entrada=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'operacao-teste.json')
     $resp=$null
     for ($i=0; $i -lt 20; $i++) {
         if ($motor.HasExited -or $proxy.HasExited) { throw 'Um serviço encerrou durante a inicialização.' }

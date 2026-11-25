@@ -1,6 +1,6 @@
 # Calculadora da Reforma Tributária
 
-Piloto local do Souza Gonçalves Advocacia para avaliar o impacto da transição com empresas e contabilidades. A versão 0.1.0 preserva o código do piloto testado em 18/11/2026. O repositório reúne a camada desenvolvida pelo escritório. A licença do motor de terceiros está em LICENSE-RFB.txt.
+Piloto local do Souza Gonçalves Advocacia para avaliar o impacto da transição com empresas e contabilidades. A versão 0.1.1 preserva o código do piloto testado em 18/11/2026. O repositório reúne a camada desenvolvida pelo escritório. A licença do motor de terceiros está em LICENSE-RFB.txt.
 
 ## Usar e editar
 
